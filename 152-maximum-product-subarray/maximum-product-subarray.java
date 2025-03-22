@@ -1,17 +1,30 @@
 class Solution {
     public int maxProduct(int[] nums) {
-        int ans = nums[0];
-        int l = 1;
-        int r = 1;
-        
-        for(int i=0;i<nums.length;i++){
-            l = l==0?1:l;
-            r = r==0?1:r;
-
-            l*= nums[i];
-            r*=nums[nums.length-1-i];
-            ans=Math.max(ans,Math.max(l,r));
+        if (nums == null || nums.length == 0) {
+            return 0;
         }
-        return ans;
+
+        int maxNegative = nums[0];
+        int maxPositive = nums[0];
+        int maxProduct = nums[0];   // Store the maximum result encountered
+
+        for (int i = 1; i < nums.length; i++) {
+            int temp = nums[i];
+
+            // Swap when negative to flip the min and max
+            if (temp < 0) {
+                int swap = maxPositive;
+                maxPositive = maxNegative;
+                maxNegative = swap;
+            }
+
+            maxPositive = Math.max(temp, maxPositive * temp);
+            maxNegative = Math.min(temp, maxNegative * temp);
+
+            // Update the max product encountered so far
+            maxProduct = Math.max(maxProduct, maxPositive);
+        }
+
+        return maxProduct;
     }
 }
