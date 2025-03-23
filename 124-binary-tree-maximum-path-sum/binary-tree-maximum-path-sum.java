@@ -15,23 +15,20 @@
  */
 class Solution {
     public int maxPathSum(TreeNode root) {
-        int[]maxSum = new int[1];
-        maxSum[0]=Integer.MIN_VALUE;
-        maxSumPath(root,maxSum);
-        return maxSum[0];
+        TreeNode  ans = new TreeNode(Integer.MIN_VALUE);    
+        int temp= maxPathSumUtil(root,ans);
+        int finalAns = ans.val;
+        ans = new TreeNode(Integer.MIN_VALUE);
+        return finalAns;
     }
 
-    private static int maxSumPath(TreeNode root, int[]maxSum){
+    private static int maxPathSumUtil(TreeNode root, TreeNode ans) {
         if(root==null)
             return 0;
-
-        int leftSum = Math.max(0,maxSumPath(root.left,maxSum));
-        int rightSum = Math.max(0,maxSumPath(root.right,maxSum));
-        maxSum[0]=Math.max(leftSum+rightSum+root.val,maxSum[0]);
-        return Math.max(leftSum,rightSum)+root.val;     
+        int leftSum = Math.max(0,maxPathSumUtil(root.left,ans));
+        int rightSum = Math.max(0,maxPathSumUtil(root.right,ans));    
+        int tempSum = Math.max(root.val,Math.max(leftSum,rightSum)+root.val);
+        ans.val = Math.max(ans.val,rightSum+leftSum +root.val);
+        return tempSum;
     }
-
-    // private static boolean isLeaf(TreeNode root){
-    //     return root.left==null && root.right==null;
-    // }
 }
