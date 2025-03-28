@@ -1,52 +1,36 @@
 class Solution {
     public boolean isBipartite(int[][] graph) {
-        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
-        for(int i=0;i<graph.length;i++)
-            adjList.add(new ArrayList<>());
-        makeAdjList(adjList, graph);
-        int[] colors = new int[graph.length];
-        Arrays.fill(colors,-1);
-
-        boolean ans = true;
+       int V = graph.length;
+       int[] vis= new int[V];
+       Arrays.fill(vis,-1);
 
        for(int i=0;i<graph.length;i++){
-           if(colors[i]==-1){
-               ans=ans && checkGraph(i,adjList,colors);
-           }
+        if(vis[i]==-1) {
+            if(bfs(i,vis,graph) ==false)
+                return false;
        }
-    
-    return ans;
-    
+       }
+    return true;
+      
     }
 
-    private static boolean checkGraph(int start, ArrayList<ArrayList<Integer>> adjList,int[]colors){
+    public boolean bfs(int src,int[]vis, int[][] graph){
     Queue<Integer> q = new LinkedList<>();
-        q.add(start);
-        colors[start]=0;
-        
-        while(!q.isEmpty()){
-            int temp = q.poll();
-            for(int x: adjList.get(temp)){
-                if(colors[x]==-1){
-                    colors[x]=1-colors[temp];
-                    q.add(x);
-                }
-                else{
-                    if(colors[x]==colors[temp])
-                        return false;
-                }
+       vis[src]=0;
+       q.add(src);
+
+       while(!q.isEmpty()) {
+        int polled = q.poll();
+        for(int neighbor: graph[polled]) {
+            if(vis[neighbor]==-1) {
+                vis[neighbor] = 1-vis[polled];
+                q.add(neighbor);
+            }else{
+                if(1-vis[polled]!=vis[neighbor])
+                    return false;
             }
         }
-
+       }
         return true;
-    }
-
-    private static void makeAdjList(ArrayList<ArrayList<Integer>> adjList,int[][] graph ){
-        for(int i=0;i<graph.length;i++){
-            for(int j=0;j<graph[i].length;j++){
-                adjList.get(i).add(graph[i][j]);    
-            }
-            
-        }
     }
 }
