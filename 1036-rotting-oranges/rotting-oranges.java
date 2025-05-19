@@ -1,47 +1,47 @@
 class Solution {
     public int orangesRotting(int[][] grid) {
-        int ans = -1;
-        int[] xi={0,1,0,-1};
-        int[] yi={1,0,-1,0};
+        int minutes = -1;
 
-        Queue<Pair> q = new LinkedList<>();
-        for(int i=0;i<grid.length;i++){
-            for(int j=0;j<grid[0].length;j++){
-                if(grid[i][j]==2)
-                    q.add(new Pair(i,j));
+        Queue<Pair> queue = new LinkedList<>();
+        for(int i=0;i<grid.length;i++) {
+            for(int j=0;j<grid[0].length;j++) {
+                if(grid[i][j]==2) {
+                    queue.add(new Pair(i,j));
+                }
             }
         }
 
-        while(!q.isEmpty()){
-            ans++;
-            int size = q.size();
-            for(int x=0;x<size;x++){
-                Pair p = q.poll();
-            for(int i=0;i<4;i++){
-                if(isSafe(grid,p.x+xi[i],p.y+yi[i])){
-                    q.add(new Pair(p.x+xi[i],p.y+yi[i]));
-                    grid[p.x+xi[i]][p.y+yi[i]]=2;
-                }        
-              }       
+        int[]dx = {0,0,1,-1};
+        int[]dy = {1,-1,0,0};
+
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            minutes++;
+            for(int i=0;i<size;i++) {
+                Pair orange = queue.poll();
+                grid[orange.x][orange.y]=2;
+                for(int j=0;j<4;j++) {
+                    int newX = dx[j]+orange.x;
+                    int newY = dy[j]+orange.y;
+                    if(newX>=0 && newY>=0 && newX<grid.length && newY<grid[0].length && grid[newX][newY] ==1){
+                        grid[newX][newY]=2;
+                        queue.add(new Pair(newX,newY));
+                    }
+                }
             }
         }
-
-        for(int i=0;i<grid.length;i++){
-            for(int j=0;j<grid[0].length;j++){
-                if(grid[i][j]==1)
+        for(int i=0;i<grid.length;i++) {
+            for(int j=0;j<grid[0].length;j++) {
+                if(grid[i][j]==1) {
                     return -1;
+                }
             }
         }
-        return ans==-1?0:ans;
+        return minutes==-1?0:minutes;
     }
-
-    private static boolean isSafe(int[][]grid,int x, int y){
-        return x>=0 && y>=0 && x<grid.length && y<grid[0].length && grid[x][y]==1;
-    }
-
     static class Pair{
-        int x, y;
-        Pair(int x, int y){
+        int x,y;
+        Pair(int x, int y) {
             this.x=x;
             this.y=y;
         }
