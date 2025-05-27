@@ -1,50 +1,34 @@
 class Solution {
     public int numIslands(char[][] grid) {
-        int M = grid.length;
-        int N = grid[0].length;
-        boolean[][]  visited = new boolean[M][N];
-        int ans =0;
+        int islands = 0;
 
-        for(int i=0;i<M;i++) {
-            for(int j=0;j<N;j++) {
+        for(int i=0;i<grid.length;i++) {
+            for(int j=0;j<grid[0].length;j++) {
                 if(grid[i][j]=='1') {
-                    ans++;
-                    numIslandsUtil(grid,i,j,M,N);
+                   islands++;
+                   dfs(grid,i,j); 
                 }
             }
         }
-        return ans;
+        return islands;
     }
 
-    private static void numIslandsUtil(char[][]grid,int i, int j, int M, int N) {
-        int[]x = {0,1,-1,0};
-        int[]y = {1,0,0,-1};
-        Queue<Pair> q = new LinkedList<>();
+    private static void dfs(char[][]grid,int i, int j) {
+        if(grid[i][j]=='0')
+            return;
+
         grid[i][j]='0';
-        q.add(new Pair(i,j));
-        while(!q.isEmpty()) {
-        Pair p = q.poll();
-        int pickX = p.x;
-        int pickY = p.y;
-        for(int neigh=0;neigh<4;neigh++) {   
-        int leftSide = x[neigh]+pickX;
-        int rightSide = y[neigh]+pickY;
-           if(isValid(grid,leftSide,rightSide,M,N)) {
-                q.add(new Pair(leftSide,rightSide));
-                grid[leftSide][rightSide]='0';
-           } 
-        }
-    }    
-}
-    private static boolean isValid(char[][]grid,int i,int j,int M, int N){
-        return i<M && j<N && i>=0 && j>=0 && grid[i][j]=='1';
-    }
-}
 
-class Pair {
-   int x,y;
-   Pair(int x, int y){
-    this.x=x;
-    this.y=y;
-   }             
+        int[]x={0,0,1,-1};
+        int[]y={1,-1,0,0};
+
+        for(int z=0;z<4;z++) {
+            int newX = x[z]+i;
+            int newY = y[z]+j;
+
+            if(newX>=0 && newY>=0 && newX<grid.length && newY<grid[0].length && grid[newX][newY] == '1'){
+                 dfs(grid,newX,newY);
+            }
+        }    
+    }
 }
