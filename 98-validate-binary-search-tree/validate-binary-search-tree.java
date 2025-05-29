@@ -13,32 +13,32 @@
  *     }
  * }
  */
-// class Solution {
-//     public boolean isValidBST(TreeNode root) {
-//         return validateBst(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
-//     }
-
-//     private static boolean validateBst(TreeNode root,int low,int high) {
-//         if(root==null || (root.left == null && root.right == null)) 
-//             return true;
-
-//         return  (root.val>=low  && root.val<=high) &&
-//                 validateBst(root.left,low,root.val) &&
-//                 validateBst(root.right,root.val,high);
-//     }
-
-// }
 class Solution {
     public boolean isValidBST(TreeNode root) {
-        return validateBst(root, Long.MIN_VALUE, Long.MAX_VALUE);
+        return validateBst(root,Long.MIN_VALUE,Long.MAX_VALUE);
     }
 
-    private boolean validateBst(TreeNode root, long low, long high) {
-        if (root == null) return true;
+    private static boolean validateBst(TreeNode root,long low,long high) {
+        if(root==null) 
+            return true;
 
-        if (root.val <= low || root.val >= high) return false;
-
-        return validateBst(root.left, low, root.val) &&
-               validateBst(root.right, root.val, high);
+        return  (root.val>low  && root.val<high) &&
+                validateBst(root.left,low,root.val) &&
+                validateBst(root.right,root.val,high);
     }
+
 }
+// class Solution {
+//     public boolean isValidBST(TreeNode root) {
+//         return validateBst(root, Long.MIN_VALUE, Long.MAX_VALUE);
+//     }
+
+//     private boolean validateBst(TreeNode root, long low, long high) {
+//         if (root == null) return true;
+
+//         if (root.val <= low || root.val >= high) return false;
+
+//         return validateBst(root.left, low, root.val) &&
+//                validateBst(root.right, root.val, high);
+//     }
+// }
