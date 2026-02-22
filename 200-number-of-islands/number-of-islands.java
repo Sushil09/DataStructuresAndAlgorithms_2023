@@ -1,34 +1,35 @@
 class Solution {
     public int numIslands(char[][] grid) {
         int islands = 0;
-
-        for(int i=0;i<grid.length;i++) {
-            for(int j=0;j<grid[0].length;j++) {
-                if(grid[i][j]=='1') {
-                   islands++;
-                   dfs(grid,i,j); 
+        int row=grid.length;
+        int col = grid[0].length;
+        for(int i=0;i<row;i++) {
+            for(int j=0;j<col;j++) {
+                if(grid[i][j] == '1') {
+                    islands++;
+                    checkNeighbour(grid,i,j,row,col);
                 }
             }
         }
         return islands;
     }
 
-    private static void dfs(char[][]grid,int i, int j) {
-        if(grid[i][j]=='0')
+    private void checkNeighbour(char[][]grid,int i, int j, int row, int col) {
+        if(i>=0 && j>=0 && j<col && i<row && grid[i][j]=='0') {
             return;
+        }
 
-        grid[i][j]='0';
-
-        int[]x={0,0,1,-1};
-        int[]y={1,-1,0,0};
-
-        for(int z=0;z<4;z++) {
-            int newX = x[z]+i;
-            int newY = y[z]+j;
-
-            if(newX>=0 && newY>=0 && newX<grid.length && newY<grid[0].length && grid[newX][newY] == '1'){
-                 dfs(grid,newX,newY);
+        for(int x=0;x<4;x++) {
+            if(isValid(grid,i,j,row,col)) {
+                grid[i][j]='0';
+                checkNeighbour(grid,i+1,j,row,col);
+                checkNeighbour(grid,i-1,j,row,col);
+                checkNeighbour(grid,i,j+1,row,col);
+                checkNeighbour(grid,i,j-1,row,col);
             }
-        }    
+        }
+    }
+    private boolean isValid(char[][]grid,int i, int j, int row, int col) {
+        return  i>=0 && j>=0 && i<row && j<col && grid[i][j] == '1';
     }
 }
