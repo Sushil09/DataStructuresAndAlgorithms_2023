@@ -18,8 +18,6 @@ class Solution {
         if(i>=0 && j>=0 && j<col && i<row && grid[i][j]=='0') {
             return;
         }
-
-        for(int x=0;x<4;x++) {
             if(isValid(grid,i,j,row,col)) {
                 grid[i][j]='0';
                 checkNeighbour(grid,i+1,j,row,col);
@@ -27,7 +25,6 @@ class Solution {
                 checkNeighbour(grid,i,j+1,row,col);
                 checkNeighbour(grid,i,j-1,row,col);
             }
-        }
     }
     private boolean isValid(char[][]grid,int i, int j, int row, int col) {
         return  i>=0 && j>=0 && i<row && j<col && grid[i][j] == '1';
