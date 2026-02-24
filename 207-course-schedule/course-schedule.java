@@ -1,44 +1,42 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+        int[] inDegrees = new int[numCourses];
+        // boolean[] visited = new boolean[numCourses];
+        List<List<Integer>> adjList =new ArrayList<>(numCourses);
+        
+        makeAdjList(prerequisites,numCourses, adjList);
 
-        for(int i=0;i<numCourses;i++)
-            adjList.add(new ArrayList<>());
-
-        makeAdjGraph(adjList,numCourses,prerequisites);
-
-        int[]indegree=new int[numCourses];
-        for(int i=0;i<prerequisites.length;i++){
-            indegree[prerequisites[i][0]]++;
+        for(int i=0;i<prerequisites.length;i++) {
+            inDegrees[prerequisites[i][0]]++;
         }
 
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0;i<indegree.length;i++){
-            if(indegree[i]==0)
-                q.add(i);
-        }
-
-        while(!q.isEmpty()){
-            int x=q.poll();
-            for(int i:adjList.get(x)){
-                indegree[i]--;
-                if(indegree[i]==0)
-                    q.add(i);
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0;i<inDegrees.length;i++) {
+            if(inDegrees[i]==0){
+                queue.add(i);
             }
         }
-        boolean ans = true;
 
-        for(int i=0;i<indegree.length;i++){
-            if(indegree[i]!=0)
-                ans=false;
+        while(!queue.isEmpty()) {
+            int courseId = queue.poll();
+            
+            for(int neighbour : adjList.get(courseId)) {
+                inDegrees[neighbour]--;
+                 if(inDegrees[neighbour]==0){
+                    queue.add(neighbour);
+                     
+                 }   
+            } 
         }
-return ans;
-      }
+        return !Arrays.stream(inDegrees)
+                      .anyMatch(x->x>0);  
+    }
 
-      private static void makeAdjGraph(ArrayList<ArrayList<Integer>> adjList, int V, int[][] edge ){
-          for(int i=0;i<edge.length;i++){
-              adjList.get(edge[i][1]).add(edge[i][0]);
-          }
-      }
+    private void makeAdjList(int[][] prerequisites, int size, List<List<Integer>> adjList) {
+        for(int i=0;i<size;i++)
+            adjList.add(new ArrayList<>());
+        for(int i=0;i<prerequisites.length;i++) {
+            adjList.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+    }
 }
-
