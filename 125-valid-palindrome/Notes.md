@@ -1,0 +1,1 @@
+<h2>valid-palindrome Notes</h2><hr>[ Time taken: 2 hrs 50 m 35 s ]
