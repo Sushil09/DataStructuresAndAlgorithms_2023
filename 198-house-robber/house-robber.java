@@ -1,17 +1,24 @@
 class Solution {
     public int rob(int[] nums) {
-    int []dp = new int[nums.length];
-    dp[0]= nums[0];
-    if(nums.length == 1)
-        return dp[0];
-    dp[1] = Math.max(nums[0], nums[1]);
-    for(int i=2;i<nums.length;i++) {
-        dp[i] = Math.max(dp[i-2]+nums[i],dp[i-1]);
+        int N =nums.length;
+        int[]dp = new int[N];
+        Arrays.fill(dp,-1);
+        int tempSum = calcMaxSum(nums,dp,N-1);
+        return Arrays.stream(dp)
+                        .max()
+                        .getAsInt();
     }
-    return Arrays.stream(dp).max().getAsInt();
-    }
+
+    private static int calcMaxSum(int[]arr, int[]dp,int N) {
+        if(N==0 )
+            return dp[N]=arr[N];
+        if(N<0)
+            return 0;    
+        if(dp[N]!=-1)
+            return dp[N];
+        int taken = arr[N] + calcMaxSum(arr,dp,N-2);
+        int notTaken = calcMaxSum(arr,dp,N-1);
+
+        return dp[N]=Math.max(taken,notTaken);        
+    } 
 }
-
-// 2,7,9,3,1
-
-// dp[i] = max(dp[i-2]+dp[i], dp[i-1])
