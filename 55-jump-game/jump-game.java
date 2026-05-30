@@ -1,13 +1,17 @@
 class Solution {
     public boolean canJump(int[] nums) {
-        int maxTillNow =0;
-        for(int i=0;i<nums.length;i++) {
-             if(maxTillNow<i) 
-                   return false;
-            maxTillNow = Math.max(nums[i]+i,maxTillNow);
+        int size = nums.length;
+        int maxIndx = 0;
+        for(int i=0;i<size;i++) {
+            if(i>maxIndx)
+               return false;   
+            int maxRechable = nums[i]+i;
+            maxIndx= Math.max(maxIndx,maxRechable);
           
-           
+            if(maxIndx>=size-1)
+                return true;
+             
         }
-        return true;
+        return false;
     }
 }
