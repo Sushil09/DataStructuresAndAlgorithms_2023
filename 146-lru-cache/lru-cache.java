@@ -1,63 +1,76 @@
 class LRUCache {
-
     private int size;
-    private Node head = new Node(0,0);
-    private Node tail = new Node(0,0);
-    private Map<Integer,Node> map;
-
+    private Node head;
+    private Node tail;
+    Map<Integer,Node> map;
+    
     public LRUCache(int capacity) {
+        // Node node = new Node(-1,-1);
         this.size = capacity;
-        map = new HashMap<>(capacity);
+        head= new Node(-1,-1);
+        tail = new Node(-1,-1);
         head.next=tail;
         tail.prev=head;
+        map = new HashMap<>(capacity);
     }
     
     public int get(int key) {
-        if(map.containsKey(key)) {
-            Node node = map.get(key);
-            remove(node);
-            insert(node);
-            return node.value;
-        } else
+        if(!map.containsKey(key)){
             return -1;
+        }
+        Node node = map.get(key);
+        int value = node.value;
+        delete(node);
+        insert(node);
+        return value;
     }
     
-     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            remove(map.get(key));
+    public void put(int key, int value) {
+        if(map.containsKey(key)) {
+               Node node = map.get(key);
+               node.value=value;
+            delete(node);
+             insert(node);
+             return;
         }
-        if (map.size() == size) {
-            remove(tail.prev);
+     
+        if(this.size==map.size()) {
+            Node oldNode = tail.prev;
+            map.remove(oldNode.key);
+            delete(oldNode);
         }
-        insert(new Node(key, value));
+        Node node = new Node(key, value);
+
+        insert(node);
+        map.put(key, node);
+        
     }
 
-    private void remove(Node node) {
-        map.remove(node.key);
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+    private void delete(Node node) {
+        node.prev.next=node.next;
+        node.next.prev=node.prev;
     }
 
     private void insert(Node node) {
-        map.put(node.key, node);
-        node.next = head.next;
-        node.next.prev = node;
-        head.next = node;
-        node.prev = head;
+        node.next=head.next;
+        head.next.prev=node;
+        node.prev=head;
+        head.next=node;
     }
+    
+}
 
-    static class Node{
-        Node next;
-        Node prev;
-        int key;
-        int value;
+class Node {
+    int value;
+    int key;
+    Node next;
+    Node prev;
 
-        Node(int key, int value) {
-            this.key = key;
-            this.value= value;
-            this.next=null;
-            this.prev=null;
-        }
+    Node(int key,int value) {
+        this.key=key;
+        this.value = value;
+        this.next=null;
+        this.prev=null;
     }
 }
 
