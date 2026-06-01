@@ -1,47 +1,52 @@
 class Solution {
     public int numBusesToDestination(int[][] routes, int source, int target) {
-        Map<Integer, List<Integer>> busStops = new HashMap<>();
-        int stops =routes.length;
-        int hops=1;
-        if(source==target)
+        Map<Integer,List<Integer>> adjList = new HashMap<>();
+        createAdjList(adjList,routes);
+        return minBuses(adjList,source,target,routes);
+    }
+
+    private static int minBuses(Map<Integer,List<Integer>> adjList, int src, int dst, int[][] routes) {
+        if(src==dst)
             return 0;
+        int busCount = 1;
+        Set<Integer> visited = new HashSet<>();
 
-        for(int i=0; i<routes.length;i++) {
-            for(int j=0;j<routes[i].length;j++) {
-                busStops.computeIfAbsent(routes[i][j],k->new ArrayList<>()).add(i);
-            }
-        }
-        if(!busStops.containsKey(source))
-            return -1;
-
-        Set<Integer> isVisited = new HashSet<>();
         Queue<Integer> queue = new LinkedList<>();
-        for(int stop: busStops.get(source)) {
-            queue.offer(stop);
-            isVisited.add(stop);
-        }
 
+        if(adjList.containsKey(src)){
+for(int stops: adjList.get(src)) {
+            queue.add(stops);
+            visited.add(stops);
+        }
+        }     
+
+        
         while(!queue.isEmpty()) {
-         
             int size = queue.size();
             for(int i=0;i<size;i++) {
-            int stop = queue.poll();
-            // isVisited.add(stop);
-            
-            for(int bus: routes[stop]) {
-                if(bus == target){
-                    return hops;
-                }
-                for(int middleStop: busStops.get(bus)){
-                    if(!isVisited.contains(middleStop)){
-                        queue.add(middleStop);
-                        isVisited.add(middleStop);
+                int polled = queue.poll();
+                for(int stop: routes[polled]) {
+                    if(stop == dst) {
+                        return busCount;
+                    }
+                    for(int road: adjList.get(stop)) {
+                    if(!visited.contains(road)){
+                        queue.add(road);
+                        visited.add(road);
+                    }
                     }
                 }
             }
-        }
-           hops++;
+            busCount++;
         }
         return -1;
+    }
+
+    private static void createAdjList(Map<Integer,List<Integer>> adjList, int[][] routes) {
+        for(int i=0;i<routes.length;i++) {
+            for(int j=0;j<routes[i].length;j++) {
+                adjList.computeIfAbsent(routes[i][j],a->new ArrayList<>()).add(i);
+            }
+        }
     }
 }
