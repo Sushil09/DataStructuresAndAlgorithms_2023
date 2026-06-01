@@ -19,14 +19,10 @@ class Solution {
         if(grid[i][j] == 1 || grid[i][j] == 2)
         return true;
 
-    grid[i][j] = 2;
+         grid[i][j] = 2;
 
-            // if(grid[i][j]==0){
-            //    grid[i][j]=2; 
 return surroundedByOnes(i+1,j,grid) & surroundedByOnes(i-1,j,grid)
                & surroundedByOnes(i,j+1,grid) & surroundedByOnes(i,j-1,grid);
-           
-        //   return false;      
          
     }
 }
