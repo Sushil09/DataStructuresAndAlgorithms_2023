@@ -1,75 +1,56 @@
 class Solution {
-
     public int orangesRotting(int[][] grid) {
-
-        int n = grid.length;
-        int m = grid[0].length;
-
+        int minutes = 0;
         Queue<int[]> queue = new LinkedList<>();
+        int freshCount =0;
 
-        int fresh = 0;
-
-        // collect rotten oranges and count fresh oranges
-        for (int i = 0; i < n; i++) {
-
-            for (int j = 0; j < m; j++) {
-
-                if (grid[i][j] == 2) {
-                    queue.offer(new int[]{i, j});
+        for(int i=0;i<grid.length;i++) {
+            for(int j=0;j<grid[0].length;j++) {
+                if(grid[i][j]==2) {
+                    queue.add(new int[]{i,j});
                 }
-
-                else if (grid[i][j] == 1) {
-                    fresh++;
-                }
+                if(grid[i][j]==1)
+                  freshCount++;
             }
         }
+    if(queue.isEmpty()) {
+        if(freshCount>0)
+            return -1;
+        else
+            return 0;    
+        }
 
-        // no fresh oranges already
-        if (fresh == 0)
-            return 0;
+        int[]dx= {0,0,1,-1};
+        int[]dy= {1,-1,0,0};
 
-        int minutes = 0;
-
-        int[] dx = {0, 0, 1, -1};
-        int[] dy = {1, -1, 0, 0};
-
-        while (!queue.isEmpty()) {
-
+        while(!queue.isEmpty()) {
             int size = queue.size();
-
-            boolean rotted = false;
-
-            for (int i = 0; i < size; i++) {
-
-                int[] curr = queue.poll();
-
-                int x = curr[0];
-                int y = curr[1];
-
-                for (int d = 0; d < 4; d++) {
-
-                    int nx = x + dx[d];
-                    int ny = y + dy[d];
-
-                    if (nx >= 0 && nx < n &&
-                        ny >= 0 && ny < m &&
-                        grid[nx][ny] == 1) {
-
-                        grid[nx][ny] = 2;
-
-                        fresh--;
-
-                        queue.offer(new int[]{nx, ny});
-
-                        rotted = true;
+            for(int i=0;i<size;i++) {
+                int x = queue.peek()[0];
+                int y = queue.poll()[1];
+                for(int k=0;k<4;k++) {
+                    int X = x+dx[k];
+                    int Y = y+dy[k];
+                    if(isFresh(X,Y,grid,grid.length,grid[0].length)) {
+                        grid[X][Y]=2;
+                        queue.add(new int[]{X,Y});
                     }
                 }
             }
-
-            if (rotted)
-                minutes++;
+            minutes++;
         }
 
-        return fresh == 0 ? minutes : -1;
+        for(int i=0;i<grid.length;i++) {
+            for(int j=0;j<grid[0].length;j++) {
+                if(grid[i][j]==1) {
+                    return -1;
+                }
+            }
+        }
+        return minutes-1;
+    }
+
+    private static boolean isFresh(int i, int j, int[][]grid,int N, int M) {
+        return i>=0 && j>=0 && i<N && j<M && grid[i][j]==1;
     }
 }
