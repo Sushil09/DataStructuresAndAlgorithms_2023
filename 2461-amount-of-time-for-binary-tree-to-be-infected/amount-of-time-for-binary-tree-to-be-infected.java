@@ -44,24 +44,22 @@ class Solution {
     }
 
     private static void createAdjMap(Map<Integer,List<Integer>> adjList, TreeNode root) {
-        if(root==null)
-            return;
-        if(root.left == null && root.right == null){
-            adjList.computeIfAbsent(root.val,k->new ArrayList<>()).add(root.val); 
-        }    
-        
-        if(root.left!=null){
-            adjList.computeIfAbsent(root.val,k->new ArrayList<>()).add(root.left.val); 
-            adjList.computeIfAbsent(root.left.val,k->new ArrayList<>()).add(root.val); 
-        }
+    if(root == null)
+        return;
 
-        if(root.right!=null){
-            adjList.computeIfAbsent(root.val,k->new ArrayList<>()).add(root.right.val); 
-            adjList.computeIfAbsent(root.right.val,k->new ArrayList<>()).add(root.val); 
-        }
+    adjList.computeIfAbsent(root.val, k -> new ArrayList<>());
 
-        createAdjMap(adjList,root.left);
-        createAdjMap(adjList,root.right);
-               
+    if(root.left != null){
+        adjList.get(root.val).add(root.left.val);
+        adjList.computeIfAbsent(root.left.val,k->new ArrayList<>()).add(root.val);
     }
+
+    if(root.right != null){
+        adjList.get(root.val).add(root.right.val);
+        adjList.computeIfAbsent(root.right.val,k->new ArrayList<>()).add(root.val);
+    }
+
+    createAdjMap(adjList, root.left);
+    createAdjMap(adjList, root.right);
+}   
 }
