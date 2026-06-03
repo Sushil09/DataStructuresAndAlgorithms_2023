@@ -11,43 +11,36 @@
  */
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        int size1 = calculateSize(headA);
-        int size2 = calculateSize(headB);
-        
-        int sizeDiff = Math.abs(size1-size2);
-        ListNode temp1,temp2;
+        int size1 = calcSize(headA);
+        int size2 = calcSize(headB);
 
-        if(size1>size2) {
-            temp1=headA;
-            temp2=headB;
-        }else{
-            temp2=headA;
-            temp1=headB;
+        int diff = Math.abs(size1-size2);
+        ListNode trav = size1>size2?headA:headB;
+
+        while(trav!=null && diff-->0) {
+            trav = trav.next;
         }
 
-        int extraNodes = 0;
-        while(temp1.next!=null && extraNodes<sizeDiff){
-            temp1=temp1.next;
-            extraNodes++;
-        }
+        ListNode trav2 = size1>size2?headB:headA;
 
-        while(temp1!=null && temp2!=null) {
-            if(temp1==temp2){
-                return temp1;
+        while(trav2!=null && trav!=null) {
+            if(trav==trav2){
+                return trav;
             }
-            temp1=temp1.next;
-            temp2=temp2.next;
+            trav2=trav2.next;
+            trav=trav.next;
         }
+
         return null;
+        
     }
 
-    private static int calculateSize(ListNode head) {
-        int count=0;
-        ListNode temp = head;
-        while(temp!=null){
-            temp=temp.next;
-            count++;
+    private static int calcSize(ListNode node) {
+        int size=0;
+        while(node!=null) {
+            size++;
+            node=node.next;
         }
-        return count;
+        return size;
     }
 }
