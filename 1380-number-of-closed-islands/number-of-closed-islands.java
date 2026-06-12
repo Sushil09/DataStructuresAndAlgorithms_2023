@@ -1,28 +1,50 @@
 class Solution {
     public int closedIsland(int[][] grid) {
-        int islands = 0;
-        for(int i=1;i<grid.length-1;i++) {
-            for(int j=1;j<grid[0].length-1;j++) {
-                if(grid[i][j]==0){
-                    if(surroundedByOnes(i,j,grid))
-                        islands++;
-                }
+        int N = grid.length, M=grid[0].length;
+        int islands =0;
+
+       //boundary Traversal
+       //Row
+
+       for(int i=0;i<M;i++){
+        if(grid[0][i]==0){
+            dfs(grid,0,i,N,M);
+        }
+        if(grid[N-1][i]==0){
+            dfs(grid,N-1,i,N,M);
+        }
+       }
+
+       //column
+       for(int i=0;i<N;i++){
+        if(grid[i][0]==0){
+            dfs(grid,i,0,N,M);
+        }
+        if(grid[i][M-1]==0){
+            dfs(grid,i,M-1,N,M);
+        }
+       } 
+
+       for(int i=0;i<N;i++) {
+        for(int j=0;j<M;j++) {
+            if(grid[i][j]==0){
+                islands++;
+                dfs(grid,i,j,N,M);
             }
         }
+       }
         return islands;
     }
+    private static void dfs(int[][]grid, int i, int j, int N, int M) {
+        if(i<0 || j<0 || i>=N || j>= M || grid[i][j]!=0){
+            return;
+        }
 
-    private static boolean surroundedByOnes(int i, int j, int[][]grid) {
-        if(i<0 || j<0 || i>=grid.length || j>=grid[0].length)
-            return false;
-
-        if(grid[i][j] == 1 || grid[i][j] == 2)
-        return true;
-
-         grid[i][j] = 2;
-
-return surroundedByOnes(i+1,j,grid) & surroundedByOnes(i-1,j,grid)
-               & surroundedByOnes(i,j+1,grid) & surroundedByOnes(i,j-1,grid);
-         
+        grid[i][j]=1;
+        
+        dfs(grid,i+1,j,N,M);
+        dfs(grid,i-1,j,N,M);
+        dfs(grid,i,j+1,N,M);
+        dfs(grid,i,j-1,N,M);
     }
 }
