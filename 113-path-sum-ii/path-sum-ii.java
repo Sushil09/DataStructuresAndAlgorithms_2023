@@ -16,28 +16,23 @@
 class Solution {
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> ans = new ArrayList<>();
-        populatePathSum(root,targetSum,ans, new ArrayList<>());
+        pathSumUtil(root,targetSum,ans, new ArrayList<>());
         return ans;
     }
 
-    private void populatePathSum(TreeNode root, int K,List<List<Integer>> ans, List<Integer> temp) {
-        if(root==null)
-            return;
-        if(isLeaf(root)){
-            if(root.val == K) {
-            temp.add(root.val);
-            ans.add(new ArrayList<>(temp));
-            temp.remove(temp.size()-1);
-        }   
+    private static void pathSumUtil(TreeNode root, int K, List<List<Integer>> ans, List<Integer> list) {
+        if(root==null) {
             return;
         }
-        temp.add(root.val);    
-        populatePathSum(root.left,K-root.val,ans,temp);
-        populatePathSum(root.right,K-root.val,ans,temp);
-        temp.remove(temp.size()-1);   
-    }
-
-    private boolean isLeaf(TreeNode root) {
-        return root.left ==null &&  root.right == null;
+        list.add(root.val);
+        if(root.left==null && root.right == null) {
+            if(K==root.val) {
+                ans.add(new ArrayList<>(list));
+            }
+        }
+        
+        pathSumUtil(root.left,K-root.val,ans,list);
+        pathSumUtil(root.right,K-root.val,ans,list);
+        list.remove(list.size()-1);
     }
 }
