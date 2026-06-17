@@ -1,50 +1,56 @@
 class Trie {
-    private Trie[] trie;
-    boolean isEndOfWord;
+    TrieNode root;
 
     public Trie() {
-        this.trie = new Trie[26];
-        this.isEndOfWord = false;
+        root = new TrieNode();
     }
     
     public void insert(String word) {
-        char[] words = word.toCharArray();
-        Trie temp =this;
-        for (int i=0;i<words.length;i++) {
-            if (temp.trie[words[i]-'a'] == null) {
-                 temp.trie[words[i]-'a'] = new Trie();   
+        TrieNode temp=root;
+        for(char c: word.toCharArray()) {
+            int idx = c -'a';
+            if(temp.trienode[idx]==null){
+                temp.trienode[idx] = new TrieNode();
             }
-            temp = temp.trie[words[i]-'a'];
+            temp = temp.trienode[idx];
         }
-        temp.isEndOfWord = true;
+        temp.isEOW=true;
     }
     
     public boolean search(String word) {
-        char[] words = word.toCharArray();
-        Trie temp = this;
-        for (int i=0;i<words.length;i++) {
-            if (temp.trie[words[i]-'a'] == null) {
-                 return false;   
-            }else{
-                temp = temp.trie[words[i]-'a'];
-            }
+        TrieNode temp=root;
+        for(char c: word.toCharArray()) {
+            int idx = c -'a';
+            if(temp.trienode[idx]==null)
+                return false;
+            temp =  temp.trienode[idx];   
         }
-        return temp.isEndOfWord;
+        return temp.isEOW;
     }
     
     public boolean startsWith(String prefix) {
-        char[] words = prefix.toCharArray();
-        Trie temp = this;
-        for (int i=0;i<words.length;i++) {
-            if (temp.trie[words[i]-'a'] == null) {
-                 return false;   
-            }else{
-                temp = temp.trie[words[i]-'a'];
-            }
+        TrieNode temp=root;
+        for(char c: prefix.toCharArray()) {
+            int idx = c -'a';
+            if(temp.trienode[idx]==null)
+                return false;
+            temp =  temp.trienode[idx];    
         }
         return true;
     }
 }
+
+class TrieNode {
+    TrieNode[] trienode;
+    boolean isEOW;
+
+    TrieNode(){
+        trienode = new TrieNode[26];
+    }
+}
+
+/*
+*/
 
 /**
  * Your Trie object will be instantiated and called as such:
